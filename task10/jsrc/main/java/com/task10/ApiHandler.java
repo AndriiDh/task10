@@ -98,12 +98,6 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 					return apiGatewayProxyResponseEvent;
 				}
 			}
-			case "/tables/{tableId}": {
-				APIGatewayProxyResponseEvent apiGatewayProxyResponseEvent = new APIGatewayProxyResponseEvent();
-				DynamoDbService dynamoDbService = new DynamoDbService();
-				int tableId = Integer.parseInt(input.getPathParameters().get("tableId"));
-				return apiGatewayProxyResponseEvent.withBody(gson.toJson(dynamoDbService.getTableById(amazonDynamoDB, tableId)));
-			}
 			case "/reservations": {
 				DynamoDbService dynamoDbService = new DynamoDbService();
 				APIGatewayProxyResponseEvent apiGatewayProxyResponseEvent = new APIGatewayProxyResponseEvent();
@@ -121,6 +115,13 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 					return apiGatewayProxyResponseEvent;
 				}
 			}
+		}
+
+		if (url.matches("/tables/.+")) {
+			APIGatewayProxyResponseEvent apiGatewayProxyResponseEvent = new APIGatewayProxyResponseEvent();
+			DynamoDbService dynamoDbService = new DynamoDbService();
+			int tableId = Integer.parseInt(input.getPathParameters().get("tableId"));
+			return apiGatewayProxyResponseEvent.withBody(gson.toJson(dynamoDbService.getTableById(amazonDynamoDB, tableId)));
 		}
 
         APIGatewayProxyResponseEvent apiGatewayProxyResponseEvent = new APIGatewayProxyResponseEvent();
